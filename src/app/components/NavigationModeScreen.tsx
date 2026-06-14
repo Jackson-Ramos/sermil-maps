@@ -1,4 +1,4 @@
-import { ArrowLeft, MapPin, ExternalLink } from 'lucide-react';
+import { ArrowLeft, MapPin, ExternalLink, Wrench } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface NavigationModeScreenProps {
@@ -85,23 +85,42 @@ export function NavigationModeScreen({ quadra, lote, onSelectMode, onBack }: Nav
           <p className="text-[#9FE1CB] text-[12px] mt-1 ml-10">Res. Jardim das Flores</p>
         </motion.div>
 
+        {/* Aviso de manutenção */}
+        <motion.div
+          variants={fadeUp}
+          className="bg-[#FFF8E6] border-2 border-[#F2C94C] rounded-[16px] p-4 mb-4 flex items-start gap-3"
+        >
+          <div className="w-8 h-8 bg-[#FCEFC2] rounded-[8px] flex items-center justify-center flex-shrink-0">
+            <Wrench className="w-4 h-4 text-[#B8860B]" />
+          </div>
+          <div>
+            <p className="text-[#8A6D00] text-[13px] font-[800]">Em manutenção</p>
+            <p className="text-[#A07E1A] text-[12px] mt-0.5 leading-relaxed">
+              O mapa interno do SERMIL e o Waze estão temporariamente indisponíveis.
+              Por enquanto, use o Google Maps.
+            </p>
+          </div>
+        </motion.div>
+
         {/* Opções de navegação */}
         <div className="space-y-3">
-          {/* SERMIL MAPS — destaque principal */}
-          <motion.button
+          {/* SERMIL MAPS — em manutenção */}
+          <motion.div
             variants={fadeUp}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => onSelectMode('sermil')}
-            className="w-full bg-[#0B4F3A] text-white py-4 px-5 rounded-[16px] flex items-center gap-4 hover:bg-[#0F6E56] transition-colors shadow-md"
+            aria-disabled="true"
+            className="w-full bg-[#E8E8E5] text-[#9B9B9B] py-4 px-5 rounded-[16px] flex items-center gap-4 cursor-not-allowed select-none"
           >
-            <div className="w-11 h-11 bg-white/15 rounded-[12px] flex items-center justify-center flex-shrink-0">
-              <MapPin className="w-6 h-6 text-white" />
+            <div className="w-11 h-11 bg-black/5 rounded-[12px] flex items-center justify-center flex-shrink-0">
+              <MapPin className="w-6 h-6 text-[#9B9B9B]" />
             </div>
-            <div className="text-left">
+            <div className="text-left flex-1">
               <div className="text-[15px] font-[800]">Navegar pelo SERMIL MAPS</div>
-              <div className="text-[11px] text-[#9FE1CB] font-[400] mt-0.5">Mapa interno · sem sair do app</div>
+              <div className="text-[11px] font-[400] mt-0.5">Mapa interno · sem sair do app</div>
             </div>
-          </motion.button>
+            <span className="text-[10px] font-[800] uppercase tracking-wide bg-[#F2C94C] text-[#7A5C00] px-2 py-1 rounded-full flex-shrink-0">
+              Em manutenção
+            </span>
+          </motion.div>
 
           {/* Google Maps */}
           <motion.button
@@ -121,27 +140,27 @@ export function NavigationModeScreen({ quadra, lote, onSelectMode, onBack }: Nav
             </div>
           </motion.button>
 
-          {/* Waze */}
-          <motion.button
+          {/* Waze — em manutenção */}
+          <motion.div
             variants={fadeUp}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => onSelectMode('waze')}
-            className="w-full bg-white border-2 border-[#E0E0DB] text-[#1B3A34] py-4 px-5 rounded-[16px] flex items-center gap-4 hover:border-[#33CCFF] hover:bg-[#F0FBFF] transition-all"
+            aria-disabled="true"
+            className="w-full bg-[#E8E8E5] border-2 border-transparent text-[#9B9B9B] py-4 px-5 rounded-[16px] flex items-center gap-4 cursor-not-allowed select-none"
           >
-            <div className="w-11 h-11 bg-[#F0FBFF] rounded-[12px] flex items-center justify-center flex-shrink-0">
+            <div className="w-11 h-11 bg-black/5 rounded-[12px] flex items-center justify-center flex-shrink-0 grayscale opacity-60">
               <WazeIcon />
             </div>
-            <div className="text-left">
+            <div className="text-left flex-1">
               <div className="text-[15px] font-[700]">Abrir no Waze</div>
-              <div className="text-[11px] text-[#9B9B9B] mt-0.5 flex items-center gap-1">
-                Abre o app instalado <ExternalLink className="w-3 h-3" />
-              </div>
+              <div className="text-[11px] mt-0.5">Abre o app instalado</div>
             </div>
-          </motion.button>
+            <span className="text-[10px] font-[800] uppercase tracking-wide bg-[#F2C94C] text-[#7A5C00] px-2 py-1 rounded-full flex-shrink-0">
+              Em manutenção
+            </span>
+          </motion.div>
         </div>
 
         <motion.p variants={fadeUp} className="text-[11px] text-[#B0BCB8] text-center mt-5 leading-relaxed">
-          Recomendamos o mapa interno para<br />melhor experiência dentro do condomínio
+          Por enquanto, a navegação está disponível<br />apenas pelo Google Maps
         </motion.p>
       </motion.div>
     </div>
