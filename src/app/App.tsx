@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { toast } from 'sonner';
+import { Toaster } from './components/ui/sonner';
+import { getMapsLink } from '../data/getMapsLink';
 import { LoginScreen } from './components/LoginScreen';
 import { QuadraSelectionScreen } from './components/QuadraSelectionScreen';
 import { LoteSelectionScreen } from './components/LoteSelectionScreen';
@@ -61,6 +64,17 @@ export default function App() {
   const handleNavigationMode = (mode: 'sermil' | 'google' | 'waze') => {
     if (mode === 'sermil') {
       navigateTo('map');
+      return;
+    }
+    if (mode === 'google') {
+      const url = getMapsLink(selectedQuadra, selectedLote);
+      if (url) {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      } else {
+        toast.error('Rota indisponível', {
+          description: `Ainda não há link do Google Maps para a Quadra ${selectedQuadra} — Lote ${selectedLote}.`,
+        });
+      }
     }
   };
 
@@ -110,6 +124,7 @@ export default function App() {
           </motion.div>
         </AnimatePresence>
       </div>
+      <Toaster position="top-center" richColors />
     </div>
   );
 }
