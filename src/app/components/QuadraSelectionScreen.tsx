@@ -1,17 +1,19 @@
 import { ArrowLeft, ChevronRight, Building2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getQuadras, getLotes } from '../../data/getMapsLink';
 
 interface QuadraSelectionScreenProps {
   onSelect: (quadra: string) => void;
   onBack: () => void;
 }
 
-const quadras = [
-  { id: 'A', name: 'Quadra A', lotes: 'Lotes 01–30', total: 30 },
-  { id: 'B', name: 'Quadra B', lotes: 'Lotes 31–60', total: 30 },
-  { id: 'C', name: 'Quadra C', lotes: 'Lotes 61–90', total: 30 },
-  { id: 'D', name: 'Quadra D', lotes: 'Lotes 91–120', total: 30 },
-];
+// Quadras derivadas do mapsLinks.json — só aparece o que está no arquivo.
+const quadras = getQuadras().map((id) => {
+  const lotes = getLotes(id);
+  const total = lotes.length;
+  const range = total > 0 ? `Lotes ${lotes[0]}–${lotes[total - 1]}` : 'Sem lotes';
+  return { id, name: `Quadra ${id}`, lotes: range, total };
+});
 
 const container = {
   hidden: {},

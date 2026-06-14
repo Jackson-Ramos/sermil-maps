@@ -1,15 +1,13 @@
 import { useState, useMemo } from 'react';
 import { ArrowLeft, Search, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getLotes } from '../../data/getMapsLink';
 
 interface LoteSelectionScreenProps {
   quadra: string;
   onSelect: (lote: string) => void;
   onBack: () => void;
 }
-
-// Lotes desativados por reforma (simulação visual)
-const LOTES_INATIVOS = ['07', '13', '20'];
 
 const container = {
   hidden: {},
@@ -25,10 +23,8 @@ export function LoteSelectionScreen({ quadra, onSelect, onBack }: LoteSelectionS
   const [selectedLote, setSelectedLote] = useState<string | null>(null);
   const [busca, setBusca] = useState('');
 
-  const todosLotes = useMemo(
-    () => Array.from({ length: 28 }, (_, i) => String(i + 1).padStart(2, '0')),
-    []
-  );
+  // Lotes derivados do mapsLinks.json para a quadra atual.
+  const todosLotes = useMemo(() => getLotes(quadra), [quadra]);
 
   const lotesFiltrados = useMemo(
     () => todosLotes.filter((l) => l.includes(busca)),
@@ -36,7 +32,6 @@ export function LoteSelectionScreen({ quadra, onSelect, onBack }: LoteSelectionS
   );
 
   const handleLoteClick = (lote: string) => {
-    if (LOTES_INATIVOS.includes(lote)) return;
     setSelectedLote(lote);
     setTimeout(() => onSelect(lote), 280);
   };
@@ -113,30 +108,23 @@ export function LoteSelectionScreen({ quadra, onSelect, onBack }: LoteSelectionS
             className="grid grid-cols-4 gap-3"
           >
             {lotesFiltrados.map((lote) => {
-              const inativo = LOTES_INATIVOS.includes(lote);
               const selecionado = selectedLote === lote;
               return (
                 <motion.button
                   key={lote}
                   variants={item}
-                  whileTap={inativo ? undefined : { scale: 0.88 }}
+                  whileTap={{ scale: 0.88 }}
                   onClick={() => handleLoteClick(lote)}
-                  disabled={inativo}
-                  title={inativo ? 'Lote em obras' : `Lote ${lote}`}
+                  title={`Lote ${lote}`}
                   className={`
                     aspect-square rounded-[14px] flex flex-col items-center justify-center text-[15px] font-[700] border-2 transition-all relative
                     ${selecionado
                       ? 'bg-[#0B4F3A] text-white border-[#0B4F3A] scale-95'
-                      : inativo
-                      ? 'bg-[#F0F0EC] text-[#C8D0CC] border-[#E8E8E4] cursor-not-allowed opacity-60'
                       : 'bg-white text-[#0B4F3A] border-[#E0E0DB] hover:border-[#1D9E75] hover:bg-[#E1F5EE]'
                     }
                   `}
                 >
                   {lote}
-                  {inativo && (
-                    <span className="text-[8px] font-[500] text-[#B0BCB8] mt-0.5 leading-tight">obras</span>
-                  )}
                 </motion.button>
               );
             })}
